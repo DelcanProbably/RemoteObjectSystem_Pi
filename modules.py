@@ -34,9 +34,6 @@ class rmod_audio(remote_module):
 		# test initialisation sound
 		self.sound_library["rs"].play()
 
-	def play(self):
-		play( [self.test_sound] )
-
 	def play(self, args):
 		sound = self.sound_library[args[0]]
 		if sound is not None:
@@ -46,6 +43,10 @@ class rmod_audio(remote_module):
 			sound.play() #pygame.mixer.Sound.play(sound)
 		else:
 			print("Could not find sound %s in sound library" % args[0])
+	
+	def play(self):
+		self.play( [self.test_sound] )
+
 
 
 	def parse_command(self, args):
@@ -53,7 +54,7 @@ class rmod_audio(remote_module):
 			self.play(args[1:])
 	
 	def id(self):
-		play(self)
+		self.play()
 
 class rmod_gpio(remote_module):
 	def __init__(self, cfg):
