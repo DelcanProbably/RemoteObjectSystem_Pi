@@ -8,13 +8,14 @@ import os
 
 def id_all():
 	print("ID command received! Calling all module's ID function.")
-	rmod_audio.id()
+	# rmod_audio.id()
+	# wait durrr i can't call that statically... will need to come up with another way of doing that
 
 class rmod_audio(remote_module):
 
 	def __init__(self, cfg):		
 		# Configure pygame
-		SOUNDLIB_PATH = os.getcwd() + "\\sound_library\\" 
+		SOUNDLIB_PATH = os.getcwd() + "/sound_library/" 
 		print(SOUNDLIB_PATH)
 		D_SAMPLERATE = cfg['Audio'].getint('SampleRate')
 		D_AUDIOBUFFER =  cfg['Audio'].getint('Buffer')
@@ -43,9 +44,6 @@ class rmod_audio(remote_module):
 			sound.play() #pygame.mixer.Sound.play(sound)
 		else:
 			print("Could not find sound %s in sound library" % args[0])
-	
-	def play(self):
-		self.play( [self.test_sound] )
 
 
 
@@ -54,7 +52,7 @@ class rmod_audio(remote_module):
 			self.play(args[1:])
 	
 	def id(self):
-		self.play()
+		self.sound_library["rs"].play()
 
 class rmod_gpio(remote_module):
 	def __init__(self, cfg):

@@ -30,7 +30,7 @@ def print_cfg(cfg):
 		print(str(sect))
 		for (key, val) in cfg.items(sect):
 			print("- " + str(key) + ": " + str(val))
-
+print_cfg(cfg)
 
 
 audio = modules.rmod_audio(cfg)
@@ -68,6 +68,8 @@ while True:
 		func = args.pop(0) # place command name in func to make structure similar to Unity
 
 		if func in BASE_COMMANDS:
+			if func == 'id':
+				audio.id()
 			BASE_COMMANDS[func]()
 		else: 
 			# Case for standard commands
