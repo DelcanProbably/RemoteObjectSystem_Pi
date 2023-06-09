@@ -52,7 +52,7 @@ class rmod_audio(remote_module):
 			print("Could not find sound %s in sound library" % args[0])
 
 	def volume(self, args):
-		self.play_volume = args[0]
+		self.play_volume = float(args[0])
 		print("Set play volume to " + str(args[0]))
 
 	def parse_command(self, args):
