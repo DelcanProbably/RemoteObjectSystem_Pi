@@ -21,6 +21,8 @@ class rmod_audio(remote_module):
 		D_AUDIOBUFFER =  cfg['Audio'].getint('Buffer')
 		pygame.mixer.init(D_SAMPLERATE, -16, 2, D_AUDIOBUFFER)
 		
+		self.play_volume = 1
+		
 		# Create sound library populated with all sounds in the sound library folder.
 		self.sound_library = {}
 		self.test_sound = ""
@@ -37,6 +39,10 @@ class rmod_audio(remote_module):
 
 	def play(self, args):
 		sound = self.sound_library[args[0]]
+		vol = self.play_volume
+		if len(args) > 1:
+			vol = args[1]
+		sound.set_volume(vol)
 		if sound is not None:
 			# Slightly bodgy method to ensure a sound always plays, even if it chokes all other concurrent sounds.
 			if pygame.mixer.find_channel() is None:
@@ -45,11 +51,16 @@ class rmod_audio(remote_module):
 		else:
 			print("Could not find sound %s in sound library" % args[0])
 
-
+	def volume(self, args):
+		self.play_volume = args[0]
+		print("Set play volume to " + str(args[0]))
 
 	def parse_command(self, args):
+		# FIXME: surely python has some scuffed way to convert a string into a function name?
 		if args[0] == "play":
 			self.play(args[1:])
+		elif args[0] == "volume":
+			self.volume(args[1:])
 	
 	def id(self):
 		self.sound_library["rs"].play()
