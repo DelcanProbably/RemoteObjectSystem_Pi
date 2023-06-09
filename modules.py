@@ -27,7 +27,11 @@ class rmod_audio(remote_module):
 		self.sound_library = {}
 		self.test_sound = ""
 		for f in os.listdir(SOUNDLIB_PATH):
-			sound_name = f.split(".")[0]
+			spl = f.split('.')
+			if spl[1] not in ['wav', 'ogg']:
+				print ("Warning: Sound library file " + str(f) + " is not valid and will not be included, only wav and ogg supported.")
+				continue
+			sound_name = spl[0]
 			self.sound_library[sound_name] = pygame.mixer.Sound(SOUNDLIB_PATH + f)
 			
 			# TODO: There should be a way to explicitly specify a test sound, or to look for a particular filename for the test sound.
@@ -38,6 +42,9 @@ class rmod_audio(remote_module):
 		self.sound_library["rs"].play()
 
 	def play(self, args):
+		if args[0] not in sound_library:
+			print("Could not find sound in sound library.")
+			return
 		sound = self.sound_library[args[0]]
 		vol = self.play_volume
 		if len(args) > 1:
@@ -49,7 +56,7 @@ class rmod_audio(remote_module):
 				pygame.mixer.stop()
 			sound.play() #pygame.mixer.Sound.play(sound)
 		else:
-			print("Could not find sound %s in sound library" % args[0])
+			print("Could not find sound %s in sound library." % args[0])
 
 	def volume(self, args):
 		self.play_volume = float(args[0])
