@@ -15,7 +15,14 @@ class rmod_audio(remote_module):
 
 	def __init__(self, cfg):		
 		# Configure pygame
-		SOUNDLIB_PATH = os.getcwd() + "/sound_library/" 
+		### UNTESTED CODE
+		path = cfg['Audio'].get('SoundLibraryPath', '/sound_library/')
+		SOUNDLIB_PATH = ""
+		if path[0] == "/":
+			SOUNDLIB_PATH = os.getcwd() + path
+		else:
+			SOUNDLIB_PATH = path
+		### END UNTESTED CODE
 		print(SOUNDLIB_PATH)
 		D_SAMPLERATE = cfg['Audio'].getint('SampleRate')
 		D_AUDIOBUFFER =  cfg['Audio'].getint('Buffer')
