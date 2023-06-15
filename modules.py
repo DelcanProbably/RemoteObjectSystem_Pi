@@ -4,6 +4,7 @@ from re import L
 from remote_module import remote_module
 import pygame
 import os
+import pyduino
 
 
 def id_all():
@@ -15,14 +16,7 @@ class rmod_audio(remote_module):
 
 	def __init__(self, cfg):		
 		# Configure pygame
-		### UNTESTED CODE
-		path = cfg['Audio'].get('SoundLibraryPath', '/sound_library/')
-		SOUNDLIB_PATH = ""
-		if path[0] == "/":
-			SOUNDLIB_PATH = os.getcwd() + path
-		else:
-			SOUNDLIB_PATH = path
-		### END UNTESTED CODE
+		SOUNDLIB_PATH = os.getcwd() + "/sound_library/" 
 		print(SOUNDLIB_PATH)
 		D_SAMPLERATE = cfg['Audio'].getint('SampleRate')
 		D_AUDIOBUFFER =  cfg['Audio'].getint('Buffer')
@@ -34,11 +28,7 @@ class rmod_audio(remote_module):
 		self.sound_library = {}
 		self.test_sound = ""
 		for f in os.listdir(SOUNDLIB_PATH):
-			spl = f.split('.')
-			if spl[1] not in ['wav', 'ogg']:
-				print ("Warning: Sound library file " + str(f) + " is not valid and will not be included, only wav and ogg supported.")
-				continue
-			sound_name = spl[0]
+			sound_name = f.split(".")[0]
 			self.sound_library[sound_name] = pygame.mixer.Sound(SOUNDLIB_PATH + f)
 			
 			# TODO: There should be a way to explicitly specify a test sound, or to look for a particular filename for the test sound.
@@ -49,9 +39,6 @@ class rmod_audio(remote_module):
 		self.sound_library["rs"].play()
 
 	def play(self, args):
-		if args[0] not in sound_library:
-			print("Could not find sound in sound library.")
-			return
 		sound = self.sound_library[args[0]]
 		vol = self.play_volume
 		if len(args) > 1:
@@ -63,10 +50,10 @@ class rmod_audio(remote_module):
 				pygame.mixer.stop()
 			sound.play() #pygame.mixer.Sound.play(sound)
 		else:
-			print("Could not find sound %s in sound library." % args[0])
+			print("Could not find sound %s in sound library" % args[0])
 
 	def volume(self, args):
-		self.play_volume = float(args[0])
+		self.play_volume = args[0]
 		print("Set play volume to " + str(args[0]))
 
 	def parse_command(self, args):
@@ -78,6 +65,60 @@ class rmod_audio(remote_module):
 	
 	def id(self):
 		self.sound_library["rs"].play()
+
+
+class rmod_arduino(remote_module):
+	def __init__(self, cfg):
+		try:
+			self.a = pyduino.Arduino()
+			self.pinmode([])
+		except:
+			self.a = None
+			print("Could not find a connected Arduino, ignoring all /arduino/ commands")
+		
+	
+	def dwrite(self, args):
+		if len(args) != 2:
+			print("Invalid number of arguments")
+			return
+		pin = int(args[0])
+		val = int(args[1])
+		self.a.digital_write(pin, val)
+	
+	def awrite(self, args):
+		print("Not yet implemented")
+		pass
+	
+	def pinmode(self, args):
+		if len(args) == 0:
+			print('Setting all pins to output')
+			for i in range(13):
+				self.a.set_pin_mode(i, 'O')
+		elif len(args) == 2:
+			pin = int(args[0])
+			mode = str(args[1])
+			self.a.set_pin_mode(pin, mode)
+			
+	
+	def parse_command(self, args):
+		if self.a == None:
+			print("No Arduino found in setup, ignoring.")
+			return
+		funcs = {
+			'dwrite' : self.dwrite,
+			'awrite' : self.awrite,
+			'pinmode': self.pinmode
+		}
+		
+		if args[0] in funcs:
+			funcs[args[0]](args[1:])
+	
+	def id(self):
+		pass
+
+'''
+
+Unfinished
 
 class rmod_gpio(remote_module):
 	def __init__(self, cfg):
@@ -111,4 +152,4 @@ class rmod_midi(remote_module):
 	
 	def parse_command(self, args):
 		pass
-
+'''

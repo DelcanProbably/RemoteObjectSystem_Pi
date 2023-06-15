@@ -1,5 +1,5 @@
 class remote_module:
-	def ___init___(self):
+	def __init__(self, cfg):
 		pass
 	
 	def parse_command(self, args):

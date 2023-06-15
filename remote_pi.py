@@ -34,7 +34,7 @@ print_cfg(cfg)
 
 
 audio = modules.rmod_audio(cfg)
-rinput = modules.rmod_input(cfg)
+arduino = modules.rmod_arduino(cfg)
 
 # Configure server
 PORT = cfg['General'].getint('Port')
@@ -77,8 +77,8 @@ while True:
 			
 			if func == "audio":
 				audio.parse_command(args)
-			if func == "input":
-				rinput.parse_command(args)
+			if func == "arduino":
+				arduino.parse_command(args)
 	else:
 		print("Discarding, does not include initial \'/\'")
 	print() 
