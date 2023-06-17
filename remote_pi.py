@@ -7,11 +7,18 @@ import configparser
 import modules
 import remote_base
 
-def ping(): 
+def poke(): 
 	pass
 
+def ping(args, sock):
+	pong_ip   = args[0]
+	pong_port = int(args[1])
+	pong_msg  = b"/pong/"
+	# send pong back to host.
+	sock.sendto(pong_msg, (pong_ip, pong_port))
+
 BASE_COMMANDS = {
-	'poke' : ping,
+	'poke' : poke,
 	'id' : modules.id_all
 }
 
@@ -66,8 +73,10 @@ while True:
 		data = data[1:] # remove opening /
 		args = data.split("/") # collect each phrase of command
 		func = args.pop(0) # place command name in func to make structure similar to Unity
-
-		if func in BASE_COMMANDS:
+		
+		if func == "ping":
+			ping(args, pi_socket)
+		elif func in BASE_COMMANDS:
 			if func == 'id':
 				audio.id()
 			BASE_COMMANDS[func]()
