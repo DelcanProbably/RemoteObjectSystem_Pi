@@ -3,7 +3,6 @@ import netifaces
 import pygame
 import time
 import configparser
-
 import modules
 import remote_base
 
@@ -37,11 +36,21 @@ def print_cfg(cfg):
 		print(str(sect))
 		for (key, val) in cfg.items(sect):
 			print("- " + str(key) + ": " + str(val))
-print_cfg(cfg)
+# Uncomment to print runtime config values at start 
+# print_cfg(cfg)
 
+#####################
+### SETUP MODULES ###
+#####################
 
 audio = modules.rmod_audio(cfg)
 arduino = modules.rmod_arduino(cfg)
+# create your module here
+MODULES = {
+	"audio" : audio,
+	"arduino" : arduino
+	# add "[command]" : [module instance] here
+}
 
 # Configure server
 PORT = cfg['General'].getint('Port')
@@ -84,10 +93,12 @@ while True:
 			# Case for standard commands
 			print("Function /" + func + "/ called with arguments " + str(args))
 			
-			if func == "audio":
-				audio.parse_command(args)
-			if func == "arduino":
-				arduino.parse_command(args)
+			if func in MODULES:
+				MODULES[func].parse_command(args)
+			# if func == "audio":
+			# 	audio.parse_command(args)
+			# if func == "arduino":
+			# 	arduino.parse_command(args)
 	else:
 		print("Discarding, does not include initial \'/\'")
 	print() 
