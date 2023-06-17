@@ -94,9 +94,11 @@ class rmod_arduino(remote_module):
 			print('Setting all pins to output')
 			for i in range(13):
 				self.a.set_pin_mode(i, 'O')
-		elif len(args) == 2:
+		elif len(args) >= 1:
 			pin = int(args[0])
-			mode = str(args[1])
+			mode = 'O'
+			if len(args) > 1:
+				mode = str(args[1])
 			self.a.set_pin_mode(pin, mode)
 			
 	
