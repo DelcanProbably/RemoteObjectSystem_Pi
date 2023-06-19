@@ -1,4 +1,4 @@
-# TODO: both this script and the modules within will almost definitely need to be entirely refactored to get rid of the generic-ass names.
+# NOTE: The modules system will likely dramatically change in future versions of ROS
 
 from re import L
 from remote_module import remote_module
@@ -36,7 +36,7 @@ class rmod_audio(remote_module):
 				self.test_sound = sound_name
 
 		# test initialisation sound
-		self.sound_library["rs"].play()
+		self.sound_library["test"].play()
 
 	def play(self, args):
 		sound = self.sound_library[args[0]]
@@ -64,7 +64,7 @@ class rmod_audio(remote_module):
 			self.volume(args[1:])
 	
 	def id(self):
-		self.sound_library["rs"].play()
+		self.sound_library["test"].play()
 
 
 class rmod_arduino(remote_module):
