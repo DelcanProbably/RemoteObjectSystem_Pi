@@ -6,3 +6,5 @@ What is this?
 * https://github.com/DelcanProbably/RemoteObjectSystem
 
 The Python package for RemoteObjectSystem
+
+For package downloads - https://drive.google.com/drive/folders/1Lym2QZoBVj-NWW9MeXRdUXdf5RpOqi_6?usp=drive_link 
