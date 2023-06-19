@@ -12,9 +12,10 @@ def poke():
 def ping(args, sock):
 	pong_ip   = args[0]
 	pong_port = int(args[1])
-	pong_msg  = b"/pong/"
+	pong_msg  = "/pong/"
 	# send pong back to host.
-	sock.sendto(pong_msg, (pong_ip, pong_port))
+	print("Sending " + pong_msg + " to " + str(pong_ip) + ":" + str(pong_port))
+	sock.sendto(pong_msg.encode(), (pong_ip, pong_port))
 
 BASE_COMMANDS = {
 	'poke' : poke,

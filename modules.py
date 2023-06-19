@@ -43,7 +43,7 @@ class rmod_audio(remote_module):
 		vol = self.play_volume
 		if len(args) > 1:
 			vol = args[1]
-		sound.set_volume(vol)
+		sound.set_volume(float(vol))
 		if sound is not None:
 			# Slightly bodgy method to ensure a sound always plays, even if it chokes all other concurrent sounds.
 			if pygame.mixer.find_channel() is None:
